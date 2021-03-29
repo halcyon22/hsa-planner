@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month
 
-class BalanceDataSource(
+class BalanceFactory(
     private val context: Context,
     private val expenses: List<Expense>
 ) {
@@ -19,7 +19,7 @@ class BalanceDataSource(
         val REIMBURSEMENT_MAX = BigDecimal("1000.00")
     }
 
-    fun load(): List<BalanceLine> {
+    fun makeBalanceLines(): List<BalanceLine> {
         val lines = mutableListOf<BalanceLine>()
 
         val today: LocalDate = LocalDate.now().withDayOfMonth(1)

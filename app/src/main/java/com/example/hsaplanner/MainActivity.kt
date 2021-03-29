@@ -4,42 +4,25 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.example.hsaplanner.data.BalanceDataSource
-import com.example.hsaplanner.data.Expense
-import com.example.hsaplanner.databinding.ActivityMainBinding
-import java.math.BigDecimal
-import java.time.LocalDate
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
 
 const val TAG = "TAG"
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        val expenses = listOf(
-            Expense(
-                "Expense 1",
-                LocalDate.of(2018, 12, 17),
-                BigDecimal("6098.56"),
-                BigDecimal("3098.56")
-            ),
-            Expense(
-                "Expense 2",
-                LocalDate.of(2021, 1, 12),
-                BigDecimal("2833.72"),
-                BigDecimal("2833.72")
-            )
-        )
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        setupActionBarWithNavController(navController)
+    }
 
-        val balanceLines = BalanceDataSource(this, expenses).load()
-
-        val recyclerView = binding.balanceRecyclerView
-        recyclerView.adapter = BalanceLineAdapter(balanceLines)
-        recyclerView.setHasFixedSize(true)
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
