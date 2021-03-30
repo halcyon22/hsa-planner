@@ -15,7 +15,7 @@ class BalanceFactory(
         val STARTING_BALANCE = BigDecimal("2650.00")
         val MONTHLY_CONTRIBUTION_AMOUNT = BigDecimal("450.00")
         val EMPLOYER_CONTRIBUTION_AMOUNT = BigDecimal("600.00")
-        val THRESHOLD_AMOUNT = BigDecimal("3000.00")
+        val THRESHOLD_AMOUNT = BigDecimal("2000.00")
         val REIMBURSEMENT_MAX = BigDecimal("1000.00")
     }
 

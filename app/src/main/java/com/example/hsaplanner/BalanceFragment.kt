@@ -1,10 +1,9 @@
 package com.example.hsaplanner
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.hsaplanner.data.BalanceFactory
 import com.example.hsaplanner.data.Expense
 import com.example.hsaplanner.databinding.FragmentBalanceBinding
@@ -13,6 +12,11 @@ import java.time.LocalDate
 
 class BalanceFragment : Fragment() {
     private var binding: FragmentBalanceBinding? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val fragmentBinding = FragmentBalanceBinding.inflate(inflater, container, false)
@@ -43,6 +47,20 @@ class BalanceFragment : Fragment() {
         val recyclerView = binding?.balanceRecyclerView
         recyclerView?.adapter = BalanceLineAdapter(balanceLines)
         recyclerView?.setHasFixedSize(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                findNavController().navigate(R.id.settingsFragment)
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onDestroyView() {

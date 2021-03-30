@@ -10,4 +10,10 @@
         android:name="com.example.hsaplanner.BalanceFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_balance" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.hsaplanner.SettingsFragment"
+        android:label="@string/action_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
