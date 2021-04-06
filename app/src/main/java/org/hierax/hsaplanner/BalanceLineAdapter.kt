@@ -1,11 +1,11 @@
-package com.example.hsaplanner
+package org.hierax.hsaplanner
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.hsaplanner.data.BalanceLine
+import org.hierax.hsaplanner.data.BalanceLine
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 

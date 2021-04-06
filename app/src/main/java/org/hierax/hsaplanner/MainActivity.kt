@@ -1,4 +1,4 @@
-package com.example.hsaplanner
+package org.hierax.hsaplanner
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

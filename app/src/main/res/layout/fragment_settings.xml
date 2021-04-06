@@ -8,11 +8,11 @@
 
         <variable
             name="fragment"
-            type="com.example.hsaplanner.SettingsFragment" />
+            type="org.hierax.hsaplanner.SettingsFragment" />
 
         <variable
             name="viewModel"
-            type="com.example.hsaplanner.SettingsViewModel" />
+            type="org.hierax.hsaplanner.SettingsViewModel" />
     </data>
 
     <ScrollView

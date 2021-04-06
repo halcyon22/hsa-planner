@@ -1,12 +1,12 @@
-package com.example.hsaplanner
+package org.hierax.hsaplanner
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.hsaplanner.data.BalanceFactory
-import com.example.hsaplanner.data.Expense
-import com.example.hsaplanner.databinding.FragmentBalanceBinding
+import org.hierax.hsaplanner.data.BalanceFactory
+import org.hierax.hsaplanner.data.Expense
+import org.hierax.hsaplanner.databinding.FragmentBalanceBinding
 import java.math.BigDecimal
 import java.time.LocalDate
 

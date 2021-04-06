@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.hsaplanner"
+        applicationId "org.hierax.hsaplanner"
         minSdkVersion 29
         targetSdkVersion 30
         versionCode 1

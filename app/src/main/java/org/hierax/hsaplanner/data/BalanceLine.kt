@@ -1,4 +1,4 @@
-package com.example.hsaplanner.data
+package org.hierax.hsaplanner.data
 
 import java.math.BigDecimal
 import java.time.LocalDate

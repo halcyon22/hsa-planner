@@ -1,7 +1,7 @@
-package com.example.hsaplanner.data
+package org.hierax.hsaplanner.data
 
 import android.content.Context
-import com.example.hsaplanner.R
+import org.hierax.hsaplanner.R
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month

@@ -1,4 +1,4 @@
-package com.example.hsaplanner
+package org.hierax.hsaplanner
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
