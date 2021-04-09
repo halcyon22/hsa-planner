@@ -4,18 +4,22 @@ import android.os.Bundle
 import android.text.InputFilter
 import android.text.Spanned
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import org.hierax.hsaplanner.databinding.FragmentSettingsBinding
-import java.math.BigDecimal
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class SettingsFragment: Fragment() {
-    private var binding: FragmentSettingsBinding? = null
-    private val settingsModel: SettingsViewModel by activityViewModels()
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+    private val settingsModel: SettingsViewModel by activityViewModels {
+        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
+        SettingsViewModelFactory(hsaPlannerApplication.settingsDao, CoroutineScope(SupervisorJob()))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,16 +28,14 @@ class SettingsFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val fragmentBinding = FragmentSettingsBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
+        _binding = fragmentBinding
         return fragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        settingsModel.setCurrentBalance(BigDecimal("2650.00"))
-
-        binding?.apply {
+        binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = settingsModel
             fragment = this@SettingsFragment
@@ -49,7 +51,14 @@ class SettingsFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
-                Toast.makeText(activity, R.string.settings_saved, Toast.LENGTH_SHORT).show()
+                val currentBalance = binding.textInputCurrentBalance.text.toString().toDoubleOrNull()
+                if (currentBalance == null) {
+                    binding.textInputLayoutCurrentBalance.isErrorEnabled = true
+                    binding.textInputLayoutCurrentBalance.error = getString(R.string.setting_required)
+                    return true
+                }
+                binding.textInputLayoutCurrentBalance.isErrorEnabled = false
+                settingsModel.setBalance(currentBalance)
                 findNavController().popBackStack()
                 return true
             }
@@ -59,7 +68,7 @@ class SettingsFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
 }

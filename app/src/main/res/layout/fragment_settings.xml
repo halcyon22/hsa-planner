@@ -26,22 +26,21 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout_current_balance"
+                style="@style/Widget.HSAPlanner.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
-                app:helperTextTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                app:layout_constraintStart_toStartOf="parent"
+                android:hint="@string/current_balance"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textInput_current_balance"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="@string/current_balance"
                     android:inputType="numberDecimal"
-                    android:text="@{viewModel.currentBalance}"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:text="@{viewModel.currentBalance}" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
