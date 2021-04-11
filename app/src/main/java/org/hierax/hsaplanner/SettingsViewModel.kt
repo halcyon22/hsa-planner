@@ -16,7 +16,7 @@ class SettingsViewModel(
 
     val settings: LiveData<SettingsEntity> = settingsDao.getSettings()
 
-    fun decimalFormat(decimal: Double): String {
+    fun formatAsMoney(decimal: Double): String {
         return String.format("%1.2f", decimal)
     }
 

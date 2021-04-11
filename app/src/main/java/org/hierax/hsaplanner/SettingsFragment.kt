@@ -17,7 +17,7 @@ import java.util.regex.Pattern
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding!! // hack to avoid ?. during phases when it will be defined
     private val settingsModel: SettingsViewModel by activityViewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
         SettingsViewModelFactory(hsaPlannerApplication.settingsDao, CoroutineScope(SupervisorJob()))
@@ -43,6 +43,10 @@ class SettingsFragment : Fragment() {
             fragment = this@SettingsFragment
 
             textInputCurrentBalance.filters = arrayOf(MoneyInputFilter())
+            textInputPersonalContribution.filters = arrayOf(MoneyInputFilter())
+            textInputEmployerContribution.filters = arrayOf(MoneyInputFilter())
+            textInputReimbursementThreshold.filters = arrayOf(MoneyInputFilter())
+            textInputReimbursementMax.filters = arrayOf(MoneyInputFilter())
         }
     }
 
@@ -53,37 +57,35 @@ class SettingsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
-                val currentBalance = getUiValue(binding.textInputCurrentBalance, binding.textInputLayoutCurrentBalance)
-                val personalContribution = getUiValue(binding.textInputPersonalContribution, binding.textInputLayoutPersonalContribution)
-                val employerContribution = getUiValue(binding.textInputEmployerContribution, binding.textInputLayoutEmployerContribution)
-                val reimbursementThreshold =
-                    getUiValue(binding.textInputReimbursementThreshold, binding.textInputLayoutReimbursementThreshold)
-                val reimbursementMax = getUiValue(binding.textInputReimbursementMax, binding.textInputLayoutReimbursementMax)
-
-                if (currentBalance == null ||
-                    personalContribution == null ||
-                    employerContribution == null ||
-                    reimbursementThreshold == null ||
-                    reimbursementMax == null
-                ) {
-                    return true
-                }
-
-                settingsModel.update(
-                    currentBalance,
-                    personalContribution,
-                    employerContribution,
-                    reimbursementThreshold,
-                    reimbursementMax,
-                )
-                findNavController().popBackStack()
+                handleSave()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun getUiValue(input: TextInputEditText, inputLayout: TextInputLayout): Double? {
+    private fun handleSave() {
+        val currentBalance = getValidSettingFromUi(binding.textInputCurrentBalance, binding.textInputLayoutCurrentBalance)
+        val personalContribution = getValidSettingFromUi(binding.textInputPersonalContribution, binding.textInputLayoutPersonalContribution)
+        val employerContribution = getValidSettingFromUi(binding.textInputEmployerContribution, binding.textInputLayoutEmployerContribution)
+        val reimbursementThreshold =
+            getValidSettingFromUi(binding.textInputReimbursementThreshold, binding.textInputLayoutReimbursementThreshold)
+        val reimbursementMax = getValidSettingFromUi(binding.textInputReimbursementMax, binding.textInputLayoutReimbursementMax)
+
+        if (currentBalance == null ||
+            personalContribution == null ||
+            employerContribution == null ||
+            reimbursementThreshold == null ||
+            reimbursementMax == null
+        ) {
+            return
+        }
+
+        settingsModel.update(currentBalance, personalContribution, employerContribution, reimbursementThreshold, reimbursementMax)
+        findNavController().popBackStack()
+    }
+
+    private fun getValidSettingFromUi(input: TextInputEditText, inputLayout: TextInputLayout): Double? {
         val uiValue = input.text.toString().toDoubleOrNull()
         if (uiValue == null) {
             inputLayout.isErrorEnabled = true
