@@ -40,7 +40,87 @@
                     android:layout_height="match_parent"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:text="@{viewModel.currentBalance}" />
+                    android:text="@{viewModel.decimalFormat(viewModel.settings.currentBalance)}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_personal_contribution"
+                style="@style/Widget.HSAPlanner.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/personal_contribution"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_current_balance">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInput_personal_contribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:text="@{viewModel.decimalFormat(viewModel.settings.personalContribution)}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_employer_contribution"
+                style="@style/Widget.HSAPlanner.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/employer_contribution"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_personal_contribution">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInput_employer_contribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:text="@{viewModel.decimalFormat(viewModel.settings.employerContribution)}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_reimbursement_threshold"
+                style="@style/Widget.HSAPlanner.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/reimbursement_threshold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_employer_contribution">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInput_reimbursement_threshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:text="@{viewModel.decimalFormat(viewModel.settings.reimbursementThreshold)}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_reimbursement_max"
+                style="@style/Widget.HSAPlanner.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/reimbursement_max"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_reimbursement_threshold">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInput_reimbursement_max"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:text="@{viewModel.decimalFormat(viewModel.settings.reimbursementMax)}" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

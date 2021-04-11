@@ -8,6 +8,8 @@
     <string name="employer_contribution">Employer Contribution</string>
     <string name="reimbursement">Reimbursement</string>
     <string name="current_balance">Current Balance</string>
+    <string name="reimbursement_max">Max Reimbursement</string>
+    <string name="reimbursement_threshold">Reimbursement Threshold</string>
     <string name="settings_saved">Settings saved</string>
     <string name="setting_required">Required</string>
 </resources>

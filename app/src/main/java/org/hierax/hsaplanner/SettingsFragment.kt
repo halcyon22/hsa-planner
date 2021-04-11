@@ -7,13 +7,15 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.hierax.hsaplanner.databinding.FragmentSettingsBinding
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class SettingsFragment: Fragment() {
+class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val settingsModel: SettingsViewModel by activityViewModels {
@@ -51,14 +53,29 @@ class SettingsFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
-                val currentBalance = binding.textInputCurrentBalance.text.toString().toDoubleOrNull()
-                if (currentBalance == null) {
-                    binding.textInputLayoutCurrentBalance.isErrorEnabled = true
-                    binding.textInputLayoutCurrentBalance.error = getString(R.string.setting_required)
+                val currentBalance = getUiValue(binding.textInputCurrentBalance, binding.textInputLayoutCurrentBalance)
+                val personalContribution = getUiValue(binding.textInputPersonalContribution, binding.textInputLayoutPersonalContribution)
+                val employerContribution = getUiValue(binding.textInputEmployerContribution, binding.textInputLayoutEmployerContribution)
+                val reimbursementThreshold =
+                    getUiValue(binding.textInputReimbursementThreshold, binding.textInputLayoutReimbursementThreshold)
+                val reimbursementMax = getUiValue(binding.textInputReimbursementMax, binding.textInputLayoutReimbursementMax)
+
+                if (currentBalance == null ||
+                    personalContribution == null ||
+                    employerContribution == null ||
+                    reimbursementThreshold == null ||
+                    reimbursementMax == null
+                ) {
                     return true
                 }
-                binding.textInputLayoutCurrentBalance.isErrorEnabled = false
-                settingsModel.setBalance(currentBalance)
+
+                settingsModel.update(
+                    currentBalance,
+                    personalContribution,
+                    employerContribution,
+                    reimbursementThreshold,
+                    reimbursementMax,
+                )
                 findNavController().popBackStack()
                 return true
             }
@@ -66,11 +83,21 @@ class SettingsFragment: Fragment() {
         }
     }
 
+    private fun getUiValue(input: TextInputEditText, inputLayout: TextInputLayout): Double? {
+        val uiValue = input.text.toString().toDoubleOrNull()
+        if (uiValue == null) {
+            inputLayout.isErrorEnabled = true
+            inputLayout.error = getString(R.string.setting_required)
+            return null
+        }
+        inputLayout.isErrorEnabled = false
+        return uiValue
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
 
 // based on https://stackoverflow.com/a/13716269/421245
