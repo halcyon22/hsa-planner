@@ -34,10 +34,10 @@ class BalanceLineAdapter(
     }
 
     class BalanceLineViewHolder(lineView: View) : RecyclerView.ViewHolder(lineView) {
-        val dateView: TextView = lineView.findViewById(R.id.textView_date)
-        val descriptionView: TextView = lineView.findViewById(R.id.textView_description)
-        val transactionAmountView: TextView = lineView.findViewById(R.id.textView_transaction_amount)
-        val balanceView: TextView = lineView.findViewById(R.id.textView_balance)
+        val dateView: TextView = lineView.findViewById(R.id.date)
+        val descriptionView: TextView = lineView.findViewById(R.id.list_item_description)
+        val transactionAmountView: TextView = lineView.findViewById(R.id.transaction_amount)
+        val balanceView: TextView = lineView.findViewById(R.id.balance)
     }
 
 }

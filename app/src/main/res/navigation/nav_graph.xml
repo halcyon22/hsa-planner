@@ -16,4 +16,10 @@
         android:name="org.hierax.hsaplanner.SettingsFragment"
         android:label="@string/action_settings"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/expensesFragment"
+        android:name="org.hierax.hsaplanner.ExpensesFragment"
+        android:label="@string/action_expenses"
+        tools:layout="@layout/fragment_expense_list" />
 </navigation>

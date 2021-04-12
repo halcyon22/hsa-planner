@@ -12,4 +12,6 @@
     <string name="reimbursement_threshold">Reimbursement Threshold</string>
     <string name="settings_saved">Settings saved</string>
     <string name="setting_required">Required</string>
+    <string name="original_amount">Original Amount: %s</string>
+    <string name="remaining_amount">Remaining Amount: %s</string>
 </resources>

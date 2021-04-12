@@ -6,15 +6,17 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".BalanceFragment">
+        tools:context=".ExpensesFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_balance_lines"
-            android:name="org.hierax.hsaplanner.BalanceFragment"
+            android:id="@+id/recycler_view_expenses"
+            android:name="org.hierax.hsaplanner.ExpenseFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/balance_line"
+            tools:listitem="@layout/fragment_expense_list_item"
             android:scrollbars="vertical" />
 
     </FrameLayout>

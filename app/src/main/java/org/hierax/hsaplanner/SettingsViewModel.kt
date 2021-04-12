@@ -4,14 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.hierax.hsaplanner.repository.SettingsDao
 import org.hierax.hsaplanner.repository.SettingsEntity
 
 class SettingsViewModel(
-    private val settingsDao: SettingsDao,
-    private val coroutineScope: CoroutineScope
+    private val settingsDao: SettingsDao
 ) : ViewModel() {
 
     val settings: LiveData<SettingsEntity> = settingsDao.getSettings()
@@ -27,7 +26,7 @@ class SettingsViewModel(
         newReimbursementThreshold: Double,
         newReimbursementMax: Double,
     ) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             Log.i(TAG, "update: $newBalance, $newPersonalContribution, $newEmployerContribution, $newReimbursementThreshold, $newReimbursementMax")
             settingsDao.updateSettings(
                 SettingsEntity(
@@ -44,13 +43,12 @@ class SettingsViewModel(
 }
 
 class SettingsViewModelFactory(
-    private val settingsDao: SettingsDao,
-    private val coroutineScope: CoroutineScope
+    private val settingsDao: SettingsDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SettingsViewModel(settingsDao, coroutineScope) as T
+            return SettingsViewModel(settingsDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: $modelClass")
     }

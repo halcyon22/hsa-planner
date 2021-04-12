@@ -7,8 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import org.hierax.hsaplanner.data.BalanceFactory
 import org.hierax.hsaplanner.data.Expense
 import org.hierax.hsaplanner.databinding.FragmentBalanceBinding
@@ -20,7 +18,7 @@ class BalanceFragment : Fragment() {
     private var binding: FragmentBalanceBinding? = null
     private val settingsModel: SettingsViewModel by activityViewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
-        SettingsViewModelFactory(hsaPlannerApplication.settingsDao, CoroutineScope(SupervisorJob()))
+        SettingsViewModelFactory(hsaPlannerApplication.settingsDao)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +50,7 @@ class BalanceFragment : Fragment() {
             )
         )
 
-        val recyclerView = binding?.balanceRecyclerView
+        val recyclerView = binding?.recyclerViewBalanceLines
         recyclerView?.setHasFixedSize(true)
 
         settingsModel.settings.observe(viewLifecycleOwner, object : Observer<SettingsEntity?> {
@@ -85,6 +83,10 @@ class BalanceFragment : Fragment() {
         return when (item.itemId) {
             R.id.action_settings -> {
                 findNavController().navigate(R.id.settingsFragment)
+                return true
+            }
+            R.id.action_expenses -> {
+                findNavController().navigate(R.id.expensesFragment)
                 return true
             }
             else -> super.onOptionsItemSelected(item)

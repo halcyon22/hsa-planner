@@ -9,8 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import org.hierax.hsaplanner.databinding.FragmentSettingsBinding
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -20,7 +18,7 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!! // hack to avoid ?. during phases when it will be defined
     private val settingsModel: SettingsViewModel by activityViewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
-        SettingsViewModelFactory(hsaPlannerApplication.settingsDao, CoroutineScope(SupervisorJob()))
+        SettingsViewModelFactory(hsaPlannerApplication.settingsDao)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

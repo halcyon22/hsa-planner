@@ -9,9 +9,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [SettingsEntity::class], version = 2)
+@Database(entities = [SettingsEntity::class, ExpenseEntity::class], version = 3)
 abstract class HsaPlannerDatabase : RoomDatabase() {
     abstract fun settingsDao(): SettingsDao
+    abstract fun expenseDao(): ExpenseDao
 
     companion object {
         @Volatile
@@ -24,7 +25,7 @@ abstract class HsaPlannerDatabase : RoomDatabase() {
                     HsaPlannerDatabase::class.java,
                     "hsa_planner_database"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .addCallback(WordDatabaseCallback(coroutineScope))
                     .build()
                 INSTANCE = instance
@@ -51,6 +52,21 @@ abstract class HsaPlannerDatabase : RoomDatabase() {
                     """.trimMargin())
                 database.execSQL("drop table `settings`")
                 database.execSQL("alter table `new_settings` rename to `settings`")
+            }
+        }
+
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    |create table `expenses` (
+                    |   `id` integer not null, 
+                    |   `description` text not null default '', 
+                    |   `expense_date` text not null default 'date(current_timestamp)', 
+                    |   `original_amount` real not null default 0.0, 
+                    |   `remaining_amount` real not null default 0.0, 
+                    |   primary key(`id`)
+                    |)
+                    """.trimMargin())
             }
         }
     }

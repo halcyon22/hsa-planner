@@ -9,4 +9,5 @@ class HsaPlannerApplication : Application()  {
     private val applicationScope = CoroutineScope(SupervisorJob())
     private val database by lazy { HsaPlannerDatabase.getDatabase(this, applicationScope) }
     val settingsDao by lazy { database.settingsDao() }
+    val expenseDao by lazy { database.expenseDao() }
 }

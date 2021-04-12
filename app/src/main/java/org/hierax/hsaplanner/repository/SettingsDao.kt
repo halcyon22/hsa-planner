@@ -5,7 +5,7 @@ import androidx.room.*
 
 @Dao
 interface SettingsDao {
-    @Query("select * from settings where id = 1")
+    @Query("select * from `settings` where `id` = 1")
     fun getSettings(): LiveData<SettingsEntity>
 
     @Update
