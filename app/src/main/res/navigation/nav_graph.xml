@@ -21,5 +21,20 @@
         android:id="@+id/expensesFragment"
         android:name="org.hierax.hsaplanner.ExpensesFragment"
         android:label="@string/action_expenses"
-        tools:layout="@layout/fragment_expense_list" />
+        tools:layout="@layout/fragment_expense_list">
+        <action
+            android:id="@+id/action_expensesFragment_to_editExpensesFragment"
+            app:destination="@id/editExpensesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editExpensesFragment"
+        android:name="org.hierax.hsaplanner.EditExpenseFragment"
+        android:label="@string/action_edit_expense"
+        tools:layout="@layout/edit_expense_fragment">
+        <argument
+            android:name="expenseId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 </navigation>

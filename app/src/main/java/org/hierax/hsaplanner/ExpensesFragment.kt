@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import org.hierax.hsaplanner.data.Expense
 import org.hierax.hsaplanner.databinding.FragmentExpenseListBinding
 import java.math.BigDecimal
@@ -24,12 +25,14 @@ class ExpensesFragment : Fragment() {
 
         val expenses = listOf(
             Expense(
+                1,
                 "Expense 1",
                 LocalDate.of(2018, 12, 17),
                 BigDecimal("6098.56"),
                 BigDecimal("3098.56")
             ),
             Expense(
+                2,
                 "Expense 2",
                 LocalDate.of(2021, 1, 12),
                 BigDecimal("2833.72"),
@@ -37,9 +40,13 @@ class ExpensesFragment : Fragment() {
             )
         )
 
-        val recyclerView = binding?.recyclerViewExpenses
-        recyclerView?.setHasFixedSize(true)
-        recyclerView?.adapter = ExpenseRecyclerViewAdapter(expenses)
+        binding?.apply {
+            val recyclerView = recyclerViewExpenses
+            recyclerView.setHasFixedSize(true)
+            recyclerView.adapter = ExpenseRecyclerViewAdapter(expenses)
+
+            buttonAddExpense.setOnClickListener { findNavController().navigate(R.id.editExpensesFragment) }
+        }
     }
 
     override fun onDestroyView() {

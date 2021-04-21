@@ -37,12 +37,14 @@ class BalanceFragment : Fragment() {
 
         val expenses = listOf(
             Expense(
+                1,
                 "Expense 1",
                 LocalDate.of(2018, 12, 17),
                 BigDecimal("6098.56"),
                 BigDecimal("3098.56")
             ),
             Expense(
+                2,
                 "Expense 2",
                 LocalDate.of(2021, 1, 12),
                 BigDecimal("2833.72"),
