@@ -15,7 +15,10 @@ import java.time.LocalDate
 class EditExpenseFragment : Fragment() {
     private var _binding: EditExpenseFragmentBinding? = null
     private val binding get() = _binding!! // hack to avoid ?. during phases when it will be defined
-    private val editExpenseModel: EditExpenseViewModel by viewModels()
+    private val editExpenseModel: EditExpenseViewModel by viewModels {
+        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
+        EditExpenseViewModelFactory(hsaPlannerApplication.expenseDao)
+    }
     private var expenseId = 0
 
     companion object {
@@ -29,6 +32,7 @@ class EditExpenseFragment : Fragment() {
         arguments?.let {
             expenseId = it.getInt(EXPENSE_ID_ARG)
             Log.i(TAG, "onCreate: got argument: $expenseId")
+            editExpenseModel.loadExpense(expenseId)
         }
     }
 
@@ -53,10 +57,10 @@ class EditExpenseFragment : Fragment() {
                 val selectedDate = editExpenseModel.expenseDate.value ?: LocalDate.now()
                 DatePickerDialog(
                     requireContext(), { _, year, month, day ->
-                        editExpenseModel.expenseDate.value = LocalDate.of(year, month, day)
+                        editExpenseModel.setExpenseDate(LocalDate.of(year, month, day))
                     },
                     selectedDate.year,
-                    selectedDate.monthValue,
+                    selectedDate.monthValue-1,
                     selectedDate.dayOfMonth
                 ).show()
             }
@@ -80,12 +84,19 @@ class EditExpenseFragment : Fragment() {
     private fun handleSave() {
         Toast.makeText(view?.context, "saving!", LENGTH_SHORT).show()
 
-        Log.i(TAG, "handleSave: ${binding.textInputExpenseDate.text}")
         Log.i(TAG, "handleSave: ${binding.textInputDescription.text}")
+        Log.i(TAG, "handleSave: ${binding.textInputExpenseDate.text}")
         Log.i(TAG, "handleSave: ${binding.textInputOriginalAmount.text}")
         Log.i(TAG, "handleSave: ${binding.textInputRemainingAmount.text}")
 
         // TODO validate
+
+        editExpenseModel.updateExpense(
+            binding.textInputDescription.text.toString(),
+            binding.textInputOriginalAmount.text.toString().toDouble(),
+            binding.textInputRemainingAmount.text.toString().toDouble()
+        )
+
 
         findNavController().popBackStack()
     }

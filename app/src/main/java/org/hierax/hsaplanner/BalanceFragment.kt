@@ -1,7 +1,6 @@
 package org.hierax.hsaplanner
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -35,6 +34,7 @@ class BalanceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO replace with ExpenseEntity loaded along with settings using MediatorLiveData
         val expenses = listOf(
             Expense(
                 1,
@@ -69,12 +69,9 @@ class BalanceFragment : Fragment() {
                     requireContext()
                 ).makeBalanceLines()
 
-                Log.i(TAG, "settings observer onChanged: updating BalanceLineAdapter")
                 recyclerView?.adapter = BalanceLineAdapter(balanceLines)
             }
         })
-
-        Log.i(TAG, "BalanceFragment.onViewCreated: end")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {

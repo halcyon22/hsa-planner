@@ -11,6 +11,9 @@ interface ExpenseDao {
     @Query("select * from `expenses` order by `expense_date` asc")
     fun getAllExpenses(): Flow<List<ExpenseEntity>>
 
+    @Query("select * from `expenses` where id = :id")
+    suspend fun getExpense(id: Int): ExpenseEntity
+
     @Update
     suspend fun update(expenseEntity: ExpenseEntity)
 

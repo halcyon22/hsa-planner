@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:maxLines="1"
-                    android:text=""
+                    android:text="@{viewModel.description}"
                     tools:text="Expense A" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +93,7 @@
                     android:layout_height="match_parent"
                     android:maxLines="1"
                     android:inputType="numberDecimal"
-                    android:text=""
+                    android:text="@{viewModel.formatAsMoney(viewModel.originalAmount)}"
                     tools:text="1000.00" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,7 +114,7 @@
                     android:layout_height="match_parent"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:text=""
+                    android:text="@{viewModel.formatAsMoney(viewModel.remainingAmount)}"
                     tools:text="100.00" />
             </com.google.android.material.textfield.TextInputLayout>
 

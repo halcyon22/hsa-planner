@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import org.hierax.hsaplanner.data.Expense
 import org.hierax.hsaplanner.databinding.FragmentExpenseListBinding
-import java.math.BigDecimal
-import java.time.LocalDate
 
 class ExpensesFragment : Fragment() {
     private var binding: FragmentExpenseListBinding? = null
+    private val expensesViewModel: ExpensesViewModel by viewModels {
+        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
+        ExpensesViewModelFactory(hsaPlannerApplication.expenseDao)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val fragmentBinding = FragmentExpenseListBinding.inflate(inflater, container, false)
@@ -23,27 +25,14 @@ class ExpensesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val expenses = listOf(
-            Expense(
-                1,
-                "Expense 1",
-                LocalDate.of(2018, 12, 17),
-                BigDecimal("6098.56"),
-                BigDecimal("3098.56")
-            ),
-            Expense(
-                2,
-                "Expense 2",
-                LocalDate.of(2021, 1, 12),
-                BigDecimal("2833.72"),
-                BigDecimal("2833.72")
-            )
-        )
-
         binding?.apply {
             val recyclerView = recyclerViewExpenses
             recyclerView.setHasFixedSize(true)
-            recyclerView.adapter = ExpenseRecyclerViewAdapter(expenses)
+            val adapter = ExpenseRecyclerViewAdapter()
+            expensesViewModel.allExpenses.observe(viewLifecycleOwner, { expenses ->
+                expenses?.let { adapter.submitList(it) }
+            })
+            recyclerView.adapter = adapter
 
             buttonAddExpense.setOnClickListener { findNavController().navigate(R.id.editExpensesFragment) }
         }
