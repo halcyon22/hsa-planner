@@ -21,4 +21,8 @@
     <string name="original_amount">Original Amount</string>
     <string name="remaining_amount">Remaining Amount</string>
     <string name="open_date_dialog">Open date dialog</string>
+
+    <string name="invalid_date">Invalid date</string>
+    <string name="invalid_description">Required</string>
+    <string name="invalid_amount">Required</string>
 </resources>

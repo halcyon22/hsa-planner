@@ -2,8 +2,7 @@
 <resources>
     <style name="Widget.HSAPlanner.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeErrorColor">@color/red_700</item>
-        <item name="errorIconTint">@color/red_700</item>
         <item name="errorTextColor">@color/red_700</item>
-        <item name="errorIconDrawable">@drawable/ic_baseline_error_outline_24</item>
+        <item name="errorIconDrawable">@drawable/ic_error_outline_red</item>
     </style>
 </resources>

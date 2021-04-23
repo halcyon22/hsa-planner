@@ -2,10 +2,7 @@ package org.hierax.hsaplanner
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -31,7 +28,6 @@ class EditExpenseFragment : Fragment() {
 
         arguments?.let {
             expenseId = it.getInt(EXPENSE_ID_ARG)
-            Log.i(TAG, "onCreate: got argument: $expenseId")
             editExpenseModel.loadExpense(expenseId)
         }
     }
@@ -82,23 +78,36 @@ class EditExpenseFragment : Fragment() {
     }
 
     private fun handleSave() {
-        Toast.makeText(view?.context, "saving!", LENGTH_SHORT).show()
+        var validationFailure = false
+        if (!editExpenseModel.isValidDate(binding.textInputExpenseDate.text.toString())) {
+            binding.textInputLayoutExpenseDate.isErrorEnabled = true
+            binding.textInputLayoutExpenseDate.error = getString(R.string.invalid_date)
+            validationFailure = true
+        }
+        if (!editExpenseModel.isValidDescription(binding.textInputDescription.text.toString())) {
+            binding.textInputLayoutDescription.isErrorEnabled = true
+            binding.textInputLayoutDescription.error = getString(R.string.invalid_description)
+            validationFailure = true
+        }
+        if (!editExpenseModel.isValidDouble(binding.textInputOriginalAmount.text.toString())) {
+            binding.textInputLayoutOriginalAmount.isErrorEnabled = true
+            binding.textInputLayoutOriginalAmount.error = getString(R.string.invalid_amount)
+            validationFailure = true
+        }
+        if (!editExpenseModel.isValidDouble(binding.textInputRemainingAmount.text.toString())) {
+            binding.textInputLayoutRemainingAmount.isErrorEnabled = true
+            binding.textInputLayoutRemainingAmount.error = getString(R.string.invalid_amount)
+            validationFailure = true
+        }
 
-        Log.i(TAG, "handleSave: ${binding.textInputDescription.text}")
-        Log.i(TAG, "handleSave: ${binding.textInputExpenseDate.text}")
-        Log.i(TAG, "handleSave: ${binding.textInputOriginalAmount.text}")
-        Log.i(TAG, "handleSave: ${binding.textInputRemainingAmount.text}")
-
-        // TODO validate
-
-        editExpenseModel.updateExpense(
-            binding.textInputDescription.text.toString(),
-            binding.textInputOriginalAmount.text.toString().toDouble(),
-            binding.textInputRemainingAmount.text.toString().toDouble()
-        )
-
-
-        findNavController().popBackStack()
+        if (!validationFailure) {
+            editExpenseModel.saveExpense(
+                binding.textInputDescription.text.toString(),
+                binding.textInputOriginalAmount.text.toString().toDouble(),
+                binding.textInputRemainingAmount.text.toString().toDouble()
+            )
+            findNavController().popBackStack()
+        }
     }
 
     override fun onDestroyView() {

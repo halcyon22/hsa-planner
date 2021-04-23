@@ -6,6 +6,7 @@ import org.hierax.hsaplanner.repository.ExpenseDao
 import org.hierax.hsaplanner.repository.ExpenseEntity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 class EditExpenseViewModel(
     private val expenseDao: ExpenseDao
@@ -32,10 +33,12 @@ class EditExpenseViewModel(
         expenseId = id
         viewModelScope.launch {
             val expense = expenseDao.getExpense(expenseId)
-            _description.value = expense.description
-            _expenseDate.value = expense.expenseDate
-            _originalAmount.value = expense.originalAmount
-            _remainingAmount.value = expense.remainingAmount
+            expense?.apply {
+                _description.value = description
+                _expenseDate.value = expenseDate
+                _originalAmount.value = originalAmount
+                _remainingAmount.value = remainingAmount
+            }
         }
     }
 
@@ -43,18 +46,17 @@ class EditExpenseViewModel(
         _expenseDate.value = newExpenseDate
     }
 
-    fun updateExpense(newDescription: String, newOriginalAmount: Double, newRemainingAmount: Double) =
-        viewModelScope.launch {
-            expenseDao.update(
-                ExpenseEntity(
-                    expenseId,
-                    newDescription,
-                    _expenseDate.value!!,
-                    newOriginalAmount,
-                    newRemainingAmount
-                )
-            )
+    fun saveExpense(newDescription: String, newOriginalAmount: Double, newRemainingAmount: Double) {
+        if (expenseId > 0) {
+            viewModelScope.launch {
+                expenseDao.update(ExpenseEntity(expenseId, newDescription, _expenseDate.value!!, newOriginalAmount, newRemainingAmount))
+            }
+        } else {
+            viewModelScope.launch {
+                expenseDao.insert(newDescription, _expenseDate.value!!, newOriginalAmount, newRemainingAmount)
+            }
         }
+    }
 
     fun formatDate(date: LocalDate): String {
         return formatter.format(date)
@@ -62,6 +64,23 @@ class EditExpenseViewModel(
 
     fun formatAsMoney(decimal: Double): String {
         return String.format("%1.2f", decimal)
+    }
+
+    fun isValidDescription(description: String?): Boolean {
+        return !description.isNullOrBlank()
+    }
+
+    fun isValidDate(potentialDate: String): Boolean {
+        try {
+            formatter.parse(potentialDate)
+        } catch (e: DateTimeParseException) {
+            return false
+        }
+        return true
+    }
+
+    fun isValidDouble(potentialDouble: String?): Boolean {
+        return potentialDouble?.toDoubleOrNull() != null
     }
 }
 
