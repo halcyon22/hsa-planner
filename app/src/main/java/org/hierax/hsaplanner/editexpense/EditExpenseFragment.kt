@@ -53,14 +53,15 @@ class EditExpenseFragment : Fragment() {
             textInputRemainingAmount.filters = arrayOf(MoneyInputFilter())
 
             imageButtonOpenDateDialog.setOnClickListener {
-                val selectedDate = editExpenseModel.expenseDate.value ?: LocalDate.now()
+                val initialDate = editExpenseModel.expenseDate.value ?: LocalDate.now()
                 DatePickerDialog(
-                    requireContext(), { _, year, month, day ->
-                        editExpenseModel.setExpenseDate(LocalDate.of(year, month, day))
+                    requireContext(),
+                    { _, year, month, day ->
+                        editExpenseModel.setExpenseDate(LocalDate.of(year, month+1, day))
                     },
-                    selectedDate.year,
-                    selectedDate.monthValue-1,
-                    selectedDate.dayOfMonth
+                    initialDate.year,
+                    initialDate.monthValue - 1,
+                    initialDate.dayOfMonth
                 ).show()
             }
         }
