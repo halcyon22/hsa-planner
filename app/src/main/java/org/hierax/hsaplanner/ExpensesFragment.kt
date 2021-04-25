@@ -28,7 +28,7 @@ class ExpensesFragment : Fragment() {
         binding?.apply {
             val recyclerView = recyclerViewExpenses
             recyclerView.setHasFixedSize(true)
-            val adapter = ExpenseRecyclerViewAdapter()
+            val adapter = ExpenseRecyclerViewAdapter(expensesViewModel)
             expensesViewModel.allExpenses.observe(viewLifecycleOwner, { expenses ->
                 expenses?.let { adapter.submitList(it) }
             })

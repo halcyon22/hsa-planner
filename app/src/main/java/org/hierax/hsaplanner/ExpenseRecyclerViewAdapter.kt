@@ -12,7 +12,9 @@ import org.hierax.hsaplanner.repository.ExpenseEntity
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 
-class ExpenseRecyclerViewAdapter : ListAdapter<ExpenseEntity, ExpenseRecyclerViewAdapter.ExpenseViewHolder>(ExpenseComparator()) {
+class ExpenseRecyclerViewAdapter(
+    private val expensesViewModel: ExpensesViewModel
+) : ListAdapter<ExpenseEntity, ExpenseRecyclerViewAdapter.ExpenseViewHolder>(ExpenseComparator()) {
 
     private val formatter = DateTimeFormatter.ofPattern("yyyy MMM")
 
@@ -23,18 +25,33 @@ class ExpenseRecyclerViewAdapter : ListAdapter<ExpenseEntity, ExpenseRecyclerVie
     }
 
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
-
         val expense = getItem(position)
         holder.dateView.text = formatter.format(expense.expenseDate)
         holder.descriptionView.text = expense.description
-        holder.originalAmountView.text = holder.itemView.context.getString(R.string.original_amount_format,
-            NumberFormat.getCurrencyInstance().format(expense.originalAmount))
+        holder.originalAmountView.text = holder.itemView.context.getString(
+            R.string.original_amount_format,
+            NumberFormat.getCurrencyInstance().format(expense.originalAmount)
+        )
         holder.remainingAmountView.text = holder.itemView.context.getString(
-            R.string.remaining_amount_format, NumberFormat.getCurrencyInstance().format(expense.remainingAmount))
+            R.string.remaining_amount_format, NumberFormat.getCurrencyInstance().format(expense.remainingAmount)
+        )
 
-        holder.itemView.setOnClickListener { view ->
+        val editExpenseListener = { view: View ->
             val action = ExpensesFragmentDirections.actionExpensesFragmentToEditExpensesFragment(expense.id)
             view.findNavController().navigate(action)
+        }
+
+        holder.itemView.setOnClickListener(editExpenseListener)
+
+        holder.itemView.setOnCreateContextMenuListener { contextMenu, view, _ ->
+            contextMenu.add(R.string.action_edit_expense).setOnMenuItemClickListener {
+                editExpenseListener(view)
+                true
+            }
+            contextMenu.add(R.string.action_delete).setOnMenuItemClickListener {
+                expensesViewModel.deleteExpense(expense.id)
+                true
+            }
         }
     }
 

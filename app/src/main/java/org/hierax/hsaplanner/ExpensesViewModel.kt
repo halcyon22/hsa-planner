@@ -1,9 +1,7 @@
 package org.hierax.hsaplanner
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 import org.hierax.hsaplanner.repository.ExpenseDao
 import org.hierax.hsaplanner.repository.ExpenseEntity
 
@@ -11,6 +9,12 @@ class ExpensesViewModel(
     private val expenseDao: ExpenseDao
 ) : ViewModel() {
     val allExpenses: LiveData<List<ExpenseEntity>> = expenseDao.getAllExpenses().asLiveData()
+
+    fun deleteExpense(expenseId: Int) {
+        viewModelScope.launch {
+            expenseDao.delete(expenseId)
+        }
+    }
 }
 
 class ExpensesViewModelFactory(

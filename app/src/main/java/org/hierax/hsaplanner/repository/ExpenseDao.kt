@@ -24,4 +24,7 @@ interface ExpenseDao {
 
     @Query("insert into `expenses` (`description`, `expense_date`, `original_amount`, `remaining_amount`) values (:description, :expenseDate, :originalAmount, :remainingAmount)")
     suspend fun insert(description: String, expenseDate: LocalDate, originalAmount: Double, remainingAmount: Double)
+
+    @Query("delete from `expenses` where id = :id")
+    suspend fun delete(id: Int)
 }
