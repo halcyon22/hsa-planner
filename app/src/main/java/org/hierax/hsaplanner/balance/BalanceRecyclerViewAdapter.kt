@@ -10,9 +10,9 @@ import org.hierax.hsaplanner.data.BalanceLine
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 
-class BalanceLineAdapter(
+class BalanceRecyclerViewAdapter(
     private val lines: List<BalanceLine>
-) : RecyclerView.Adapter<BalanceLineAdapter.BalanceLineViewHolder>() {
+) : RecyclerView.Adapter<BalanceRecyclerViewAdapter.BalanceLineViewHolder>() {
 
     private val formatter = DateTimeFormatter.ofPattern("yyyy MMM")
 

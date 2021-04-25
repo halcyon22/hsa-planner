@@ -13,15 +13,15 @@ import org.hierax.hsaplanner.repository.ExpenseEntity
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 
-class ExpenseRecyclerViewAdapter(
+class ExpenseListRecyclerViewAdapter(
     private val expensesViewModel: ExpensesViewModel
-) : ListAdapter<ExpenseEntity, ExpenseRecyclerViewAdapter.ExpenseViewHolder>(ExpenseComparator()) {
+) : ListAdapter<ExpenseEntity, ExpenseListRecyclerViewAdapter.ExpenseViewHolder>(ExpenseComparator()) {
 
     private val formatter = DateTimeFormatter.ofPattern("yyyy MMM")
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_expense_list_item, parent, false)
+            .inflate(R.layout.expense_list_item, parent, false)
         return ExpenseViewHolder(view)
     }
 
@@ -38,7 +38,7 @@ class ExpenseRecyclerViewAdapter(
         )
 
         val editExpenseListener = { view: View ->
-            val action = ExpensesFragmentDirections.actionExpensesFragmentToEditExpensesFragment(expense.id)
+            val action = ExpenseListFragmentDirections.actionExpensesFragmentToEditExpensesFragment(expense.id)
             view.findNavController().navigate(action)
         }
 
@@ -69,7 +69,7 @@ class ExpenseRecyclerViewAdapter(
         }
 
         override fun areContentsTheSame(oldItem: ExpenseEntity, newItem: ExpenseEntity): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
     }
 }

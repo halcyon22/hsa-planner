@@ -10,7 +10,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".expenselist.ExpensesFragment">
+            tools:context=".expenselist.ExpenseListFragment">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_expenses"
@@ -21,7 +21,7 @@
                 android:layout_marginRight="16dp"
                 android:scrollbars="vertical"
                 app:layoutManager="LinearLayoutManager"
-                tools:listitem="@layout/fragment_expense_list_item" />
+                tools:listitem="@layout/expense_list_item" />
 
         </FrameLayout>
 

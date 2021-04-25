@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/expensesFragment"
-        android:name="org.hierax.hsaplanner.expenselist.ExpensesFragment"
+        android:name="org.hierax.hsaplanner.expenselist.ExpenseListFragment"
         android:label="@string/action_expenses"
         tools:layout="@layout/fragment_expense_list">
         <action
@@ -31,7 +31,7 @@
         android:id="@+id/editExpensesFragment"
         android:name="org.hierax.hsaplanner.editexpense.EditExpenseFragment"
         android:label="@string/action_edit_expense"
-        tools:layout="@layout/edit_expense_fragment">
+        tools:layout="@layout/fragment_edit_expense">
         <argument
             android:name="expenseId"
             android:defaultValue="0"

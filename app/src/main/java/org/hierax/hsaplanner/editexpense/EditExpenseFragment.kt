@@ -9,11 +9,11 @@ import androidx.navigation.fragment.findNavController
 import org.hierax.hsaplanner.HsaPlannerApplication
 import org.hierax.hsaplanner.MoneyInputFilter
 import org.hierax.hsaplanner.R
-import org.hierax.hsaplanner.databinding.EditExpenseFragmentBinding
+import org.hierax.hsaplanner.databinding.FragmentEditExpenseBinding
 import java.time.LocalDate
 
 class EditExpenseFragment : Fragment() {
-    private var _binding: EditExpenseFragmentBinding? = null
+    private var _binding: FragmentEditExpenseBinding? = null
     private val binding get() = _binding!! // hack to avoid ?. during phases when it will be defined
     private val editExpenseModel: EditExpenseViewModel by viewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
@@ -36,7 +36,7 @@ class EditExpenseFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val fragmentBinding = EditExpenseFragmentBinding.inflate(inflater, container, false)
+        val fragmentBinding = FragmentEditExpenseBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
         return fragmentBinding.root
     }

@@ -11,7 +11,7 @@ import org.hierax.hsaplanner.HsaPlannerApplication
 import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentExpenseListBinding
 
-class ExpensesFragment : Fragment() {
+class ExpenseListFragment : Fragment() {
     private var binding: FragmentExpenseListBinding? = null
     private val expensesViewModel: ExpensesViewModel by viewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
@@ -30,7 +30,7 @@ class ExpensesFragment : Fragment() {
         binding?.apply {
             val recyclerView = recyclerViewExpenses
             recyclerView.setHasFixedSize(true)
-            val adapter = ExpenseRecyclerViewAdapter(expensesViewModel)
+            val adapter = ExpenseListRecyclerViewAdapter(expensesViewModel)
             expensesViewModel.allExpenses.observe(viewLifecycleOwner, { expenses ->
                 expenses?.let { adapter.submitList(it) }
             })

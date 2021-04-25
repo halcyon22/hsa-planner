@@ -73,7 +73,7 @@ class BalanceFragment : Fragment() {
                     requireContext()
                 ).makeBalanceLines()
 
-                recyclerView?.adapter = BalanceLineAdapter(balanceLines)
+                recyclerView?.adapter = BalanceRecyclerViewAdapter(balanceLines)
             }
         })
     }
