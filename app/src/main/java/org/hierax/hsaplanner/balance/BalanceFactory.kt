@@ -1,7 +1,9 @@
-package org.hierax.hsaplanner.data
+package org.hierax.hsaplanner.balance
 
 import android.content.Context
+import android.util.Log
 import org.hierax.hsaplanner.R
+import org.hierax.hsaplanner.TAG
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -24,6 +26,8 @@ class BalanceFactory(
 
     fun makeBalanceLines(): List<BalanceLine> {
         val lines = mutableListOf<BalanceLine>()
+
+        Log.i(TAG, "currentBalance=$currentBalance")
 
         val today: LocalDate = LocalDate.now().withDayOfMonth(1)
         var balance = currentBalance.minus(personalContribution)

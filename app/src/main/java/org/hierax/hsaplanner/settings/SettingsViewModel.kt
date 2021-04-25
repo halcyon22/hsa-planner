@@ -1,4 +1,4 @@
-package org.hierax.hsaplanner
+package org.hierax.hsaplanner.settings
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.hierax.hsaplanner.TAG
 import org.hierax.hsaplanner.repository.SettingsDao
 import org.hierax.hsaplanner.repository.SettingsEntity
 

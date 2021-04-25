@@ -2,17 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SettingsFragment">
+    tools:context=".settings.SettingsFragment">
 
     <data>
 
         <variable
             name="fragment"
-            type="org.hierax.hsaplanner.SettingsFragment" />
+            type="org.hierax.hsaplanner.settings.SettingsFragment" />
 
         <variable
             name="viewModel"
-            type="org.hierax.hsaplanner.SettingsViewModel" />
+            type="org.hierax.hsaplanner.settings.SettingsViewModel" />
     </data>
 
     <ScrollView

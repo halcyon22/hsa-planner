@@ -1,14 +1,16 @@
-package org.hierax.hsaplanner
+package org.hierax.hsaplanner.settings
 
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.Spanned
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import org.hierax.hsaplanner.HsaPlannerApplication
+import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentSettingsBinding
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -16,7 +18,7 @@ import java.util.regex.Pattern
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!! // hack to avoid ?. during phases when it will be defined
-    private val settingsModel: SettingsViewModel by activityViewModels {
+    private val settingsModel: SettingsViewModel by viewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
         SettingsViewModelFactory(hsaPlannerApplication.settingsDao)
     }

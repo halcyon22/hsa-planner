@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.hierax.hsaplanner.R
-import org.hierax.hsaplanner.data.BalanceLine
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 

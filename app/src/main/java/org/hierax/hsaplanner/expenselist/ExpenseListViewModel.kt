@@ -9,6 +9,7 @@ class ExpensesViewModel(
     private val expenseDao: ExpenseDao
 ) : ViewModel() {
     val allExpenses: LiveData<List<ExpenseEntity>> = expenseDao.getAllExpenses().asLiveData()
+    val outstandingExpenses: LiveData<List<ExpenseEntity>> = expenseDao.getOutstandingExpenses().asLiveData()
 
     fun deleteExpense(expenseId: Int) {
         viewModelScope.launch {
