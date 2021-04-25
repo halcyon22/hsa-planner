@@ -1,4 +1,4 @@
-package org.hierax.hsaplanner
+package org.hierax.hsaplanner.expenselist
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch

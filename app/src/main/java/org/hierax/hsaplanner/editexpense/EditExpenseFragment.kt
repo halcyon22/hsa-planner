@@ -1,4 +1,4 @@
-package org.hierax.hsaplanner
+package org.hierax.hsaplanner.editexpense
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -6,6 +6,9 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import org.hierax.hsaplanner.HsaPlannerApplication
+import org.hierax.hsaplanner.MoneyInputFilter
+import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.EditExpenseFragmentBinding
 import java.time.LocalDate
 

@@ -1,4 +1,4 @@
-package org.hierax.hsaplanner
+package org.hierax.hsaplanner.balance
 
 import android.os.Bundle
 import android.view.*
@@ -6,6 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import org.hierax.hsaplanner.HsaPlannerApplication
+import org.hierax.hsaplanner.R
+import org.hierax.hsaplanner.SettingsViewModel
+import org.hierax.hsaplanner.SettingsViewModelFactory
 import org.hierax.hsaplanner.data.BalanceFactory
 import org.hierax.hsaplanner.data.Expense
 import org.hierax.hsaplanner.databinding.FragmentBalanceBinding

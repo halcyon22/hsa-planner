@@ -1,4 +1,4 @@
-package org.hierax.hsaplanner
+package org.hierax.hsaplanner.expenselist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.repository.ExpenseEntity
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter

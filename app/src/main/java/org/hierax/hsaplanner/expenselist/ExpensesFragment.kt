@@ -1,4 +1,4 @@
-package org.hierax.hsaplanner
+package org.hierax.hsaplanner.expenselist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import org.hierax.hsaplanner.HsaPlannerApplication
+import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentExpenseListBinding
 
 class ExpensesFragment : Fragment() {
