@@ -1,10 +1,9 @@
 package org.hierax.hsaplanner.balance
 
 import android.content.Context
-import android.util.Log
 import org.hierax.hsaplanner.R
-import org.hierax.hsaplanner.TAG
 import java.math.BigDecimal
+import java.math.BigDecimal.ZERO
 import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.Month
@@ -27,19 +26,19 @@ class BalanceFactory(
     fun makeBalanceLines(): List<BalanceLine> {
         val lines = mutableListOf<BalanceLine>()
 
-        Log.i(TAG, "currentBalance=$currentBalance")
-
         val today: LocalDate = LocalDate.now().withDayOfMonth(1)
-        var balance = currentBalance.minus(personalContribution)
+        var balance = currentBalance
         var expenseIndex = 0
 
         repeat(12) { monthIndex ->
             val firstOfMonth = today.plusMonths(monthIndex.toLong())
             balance = balance.plus(personalContribution)
 
-            lines.add(
-                makePersonalContribution(firstOfMonth, balance)
-            )
+            if (monthIndex < 1) {
+                lines.add(makeStartingBalanceLine(firstOfMonth, balance))
+            } else {
+                lines.add(makePersonalContribution(firstOfMonth, balance))
+            }
 
             makeEmployerContribution(firstOfMonth, balance)?.also {
                 lines.add(it)
@@ -59,6 +58,14 @@ class BalanceFactory(
         return lines
     }
 
+    private fun makeStartingBalanceLine(firstOfMonth: LocalDate, balance: BigDecimal) =
+        BalanceLine(
+            firstOfMonth,
+            description = context.getString(R.string.starting_balance),
+            transactionAmount = ZERO,
+            balance
+        )
+
     private fun makePersonalContribution(firstOfMonth: LocalDate, balance: BigDecimal) =
         BalanceLine(
             firstOfMonth,
@@ -68,7 +75,7 @@ class BalanceFactory(
         )
 
     private fun makeEmployerContribution(firstOfMonth: LocalDate, balance: BigDecimal): BalanceLine? {
-        if (employerContribution > BigDecimal.ZERO &&
+        if (employerContribution > ZERO &&
             firstOfMonth.month == Month.JANUARY || firstOfMonth.month == Month.JULY
         ) {
             return BalanceLine(
@@ -92,7 +99,7 @@ class BalanceFactory(
         val expenseFullyReimbursed = expense.remainingAmount <= reimbursementMax
         if (expenseFullyReimbursed) {
             reimbursementAmount = expense.remainingAmount
-            expense.remainingAmount = BigDecimal.ZERO
+            expense.remainingAmount = ZERO
         } else {
             expense.remainingAmount = expense.remainingAmount.minus(reimbursementMax)
         }
