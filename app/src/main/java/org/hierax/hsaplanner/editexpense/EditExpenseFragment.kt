@@ -13,8 +13,7 @@ import org.hierax.hsaplanner.settings.MoneyInputFilter
 import java.time.LocalDate
 
 class EditExpenseFragment : Fragment() {
-    private var _binding: FragmentEditExpenseBinding? = null
-    private val binding get() = _binding!! // hack to avoid ?. during phases when it will be defined
+    private lateinit var binding: FragmentEditExpenseBinding
     private val editExpenseModel: EditExpenseViewModel by viewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
         EditExpenseViewModelFactory(hsaPlannerApplication.expenseDao)
@@ -37,7 +36,7 @@ class EditExpenseFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val fragmentBinding = FragmentEditExpenseBinding.inflate(inflater, container, false)
-        _binding = fragmentBinding
+        binding = fragmentBinding
         return fragmentBinding.root
     }
 
@@ -56,9 +55,10 @@ class EditExpenseFragment : Fragment() {
                 val initialDate = editExpenseModel.expenseDate.value ?: LocalDate.now()
                 DatePickerDialog(
                     requireContext(),
-                    { _, year, month, day ->
+                    { _, year, month, day -> // date set listener
                         editExpenseModel.setExpenseDate(LocalDate.of(year, month+1, day))
                     },
+                    // initial selections
                     initialDate.year,
                     initialDate.monthValue - 1,
                     initialDate.dayOfMonth
@@ -81,6 +81,7 @@ class EditExpenseFragment : Fragment() {
         }
     }
 
+    // TODO MDP close keyboard
     private fun handleSave() {
         if (isFormValid()) {
             editExpenseModel.saveExpense(
@@ -115,10 +116,5 @@ class EditExpenseFragment : Fragment() {
             valid = false
         }
         return valid
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
