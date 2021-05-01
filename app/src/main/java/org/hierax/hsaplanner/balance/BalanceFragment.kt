@@ -1,25 +1,20 @@
 package org.hierax.hsaplanner.balance
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import org.hierax.hsaplanner.HsaPlannerApplication
 import org.hierax.hsaplanner.R
-import org.hierax.hsaplanner.TAG
 import org.hierax.hsaplanner.databinding.FragmentBalanceBinding
 import org.hierax.hsaplanner.expenselist.ExpensesViewModel
 import org.hierax.hsaplanner.expenselist.ExpensesViewModelFactory
 import org.hierax.hsaplanner.settings.SettingsViewModel
 import org.hierax.hsaplanner.settings.SettingsViewModelFactory
-import java.math.BigDecimal
-import java.math.RoundingMode
-import java.util.stream.Collectors
 
 class BalanceFragment : Fragment() {
-    private var binding: FragmentBalanceBinding? = null
+    private lateinit var binding: FragmentBalanceBinding
     private val settingsModel: SettingsViewModel by viewModels {
         val hsaPlannerApplication = activity?.application as HsaPlannerApplication
         SettingsViewModelFactory(hsaPlannerApplication.settingsDao)
@@ -43,34 +38,15 @@ class BalanceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.i(TAG, "BalanceFragment onViewCreated")
+        val recyclerView = binding.recyclerViewBalanceLines
+        recyclerView.setHasFixedSize(true)
 
-        val recyclerView = binding?.recyclerViewBalanceLines
-        recyclerView?.setHasFixedSize(true)
-
+        // fires when both of the inputs are ready, and when either one changes
         BalanceInputLiveData(expensesViewModel, settingsModel)
             .observe(viewLifecycleOwner, { (expenseEntities, settings) ->
-                val expenses = expenseEntities.stream()
-                    .map {
-                        Expense(
-                            it.description,
-                            BigDecimal.valueOf(it.originalAmount).setScale(2, RoundingMode.FLOOR),
-                            BigDecimal.valueOf(it.remainingAmount).setScale(2, RoundingMode.FLOOR)
-                        )
-                    }
-                    .collect(Collectors.toList())
-
-                val balanceLines = BalanceFactory(
-                    settings.currentBalance,
-                    settings.personalContribution,
-                    settings.employerContribution,
-                    settings.reimbursementThreshold,
-                    settings.reimbursementMax,
-                    expenses,
-                    requireContext()
-                ).makeBalanceLines()
-
-                recyclerView?.adapter = BalanceRecyclerViewAdapter(balanceLines)
+                val balanceLines = BalanceFactory(settings, expenseEntities, requireContext())
+                    .makeBalanceLines()
+                recyclerView.adapter = BalanceRecyclerViewAdapter(balanceLines)
             })
     }
 
@@ -90,11 +66,6 @@ class BalanceFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
     }
 }
 

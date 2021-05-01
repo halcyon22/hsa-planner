@@ -15,6 +15,9 @@ class BalanceRecyclerViewAdapter(
 
     private val formatter = DateTimeFormatter.ofPattern("yyyy MMM")
 
+    // TODO MDP add click handler for expense lines
+    //  use completely different views for contributions and reimbursements
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BalanceLineViewHolder {
         val lineCardLayout = LayoutInflater.from(parent.context)
             .inflate(R.layout.balance_line, parent, false)

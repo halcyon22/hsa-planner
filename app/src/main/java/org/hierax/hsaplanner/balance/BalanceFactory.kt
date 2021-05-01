@@ -2,26 +2,26 @@ package org.hierax.hsaplanner.balance
 
 import android.content.Context
 import org.hierax.hsaplanner.R
+import org.hierax.hsaplanner.repository.ExpenseEntity
+import org.hierax.hsaplanner.repository.SettingsEntity
 import java.math.BigDecimal
 import java.math.BigDecimal.ZERO
 import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.Month
+import java.util.stream.Collectors
 
 class BalanceFactory(
-    currentBalance: Double,
-    personalContribution: Double,
-    employerContribution: Double,
-    reimbursementThreshold: Double,
-    reimbursementMax: Double,
-    private val expenses: List<Expense>,
+    settings: SettingsEntity,
+    expenseEntities: List<ExpenseEntity>,
     private val context: Context
 ) {
-    private val currentBalance: BigDecimal = BigDecimal.valueOf(currentBalance).setScale(2, RoundingMode.FLOOR)
-    private val personalContribution: BigDecimal = BigDecimal.valueOf(personalContribution).setScale(2, RoundingMode.FLOOR)
-    private val employerContribution: BigDecimal = BigDecimal.valueOf(employerContribution).setScale(2, RoundingMode.FLOOR)
-    private val reimbursementThreshold: BigDecimal = BigDecimal.valueOf(reimbursementThreshold).setScale(2, RoundingMode.FLOOR)
-    private val reimbursementMax: BigDecimal = BigDecimal.valueOf(reimbursementMax).setScale(2, RoundingMode.FLOOR)
+    private val currentBalance: BigDecimal = toBigDecimal(settings.currentBalance)
+    private val personalContribution: BigDecimal = toBigDecimal(settings.personalContribution)
+    private val employerContribution: BigDecimal = toBigDecimal(settings.employerContribution)
+    private val reimbursementThreshold: BigDecimal = toBigDecimal(settings.reimbursementThreshold)
+    private val reimbursementMax: BigDecimal = toBigDecimal(settings.reimbursementMax)
+    private val expenses = transformExpenseEntities(expenseEntities)
 
     fun makeBalanceLines(): List<BalanceLine> {
         val lines = mutableListOf<BalanceLine>()
@@ -62,7 +62,7 @@ class BalanceFactory(
         BalanceLine(
             firstOfMonth,
             description = context.getString(R.string.starting_balance),
-            transactionAmount = ZERO,
+            transactionAmount = balance,
             balance
         )
 
@@ -122,6 +122,27 @@ class BalanceFactory(
 
         return ReimbursementLines(accountLine, expenseLine, endingAccountBalance, expenseFullyReimbursed)
     }
+
+    private fun toBigDecimal(value: Double): BigDecimal {
+        return BigDecimal.valueOf(value).setScale(2, RoundingMode.FLOOR)
+    }
+
+    private fun transformExpenseEntities(entities: List<ExpenseEntity>): List<Expense> {
+        return entities.stream()
+            .map {
+                Expense(it.description,
+                    toBigDecimal(it.originalAmount),
+                    toBigDecimal(it.remainingAmount)
+                )
+            }
+            .collect(Collectors.toList())
+    }
+
+    data class Expense(
+        val description: String,
+        val originalAmount: BigDecimal,
+        var remainingAmount: BigDecimal
+    )
 
     private data class ReimbursementLines(
         val accountLine: BalanceLine,
