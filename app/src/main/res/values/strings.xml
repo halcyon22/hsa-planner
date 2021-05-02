@@ -6,10 +6,11 @@
     <string name="action_edit_expense">Edit</string>
     <string name="action_delete">Delete</string>
 
-    <string name="personal_contribution">Personal Contribution</string>
-    <string name="employer_contribution">Employer Contribution</string>
-    <string name="reimbursement">Reimbursement</string>
+    <string name="personal_contribution">%s Personal Contribution</string>
+    <string name="employer_contribution">%s Employer Contribution</string>
+    <string name="reimbursement">%s Reimbursement</string>
     <string name="starting_balance">Starting Balance</string>
+    <string name="expense_amounts">%s -> %s</string>
 
     <string name="current_balance">Current Balance</string>
     <string name="reimbursement_max">Max Reimbursement</string>

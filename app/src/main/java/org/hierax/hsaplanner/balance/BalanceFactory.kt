@@ -1,7 +1,8 @@
 package org.hierax.hsaplanner.balance
 
 import android.content.Context
-import org.hierax.hsaplanner.R
+import org.hierax.hsaplanner.balance.ContributionBalanceLine.Companion.EMPLOYER
+import org.hierax.hsaplanner.balance.ContributionBalanceLine.Companion.PERSONAL
 import org.hierax.hsaplanner.repository.ExpenseEntity
 import org.hierax.hsaplanner.repository.SettingsEntity
 import java.math.BigDecimal
@@ -45,55 +46,57 @@ class BalanceFactory(
                 balance = it.balance
             }
 
-            makeReimbursementLines(expenseIndex, firstOfMonth, balance)?.also {
-                lines.add(it.accountLine)
-                lines.add(it.expenseLine)
-                balance = it.endingAccountBalance
-                if (it.expenseFullyReimbursed) {
+            makeReimbursementLine(expenseIndex, firstOfMonth, balance)?.also {
+                lines.add(it)
+                balance = it.balance
+
+                if (expenses[expenseIndex].remainingAmount == ZERO) {
                     expenseIndex++
                 }
             }
+
+            // TODO MDP keep trying for reimbursements while we're still over the threshold
+
         }
 
         return lines
     }
 
     private fun makeStartingBalanceLine(firstOfMonth: LocalDate, balance: BigDecimal) =
-        BalanceLine(
+        StartingBalanceLine(
             firstOfMonth,
-            description = context.getString(R.string.starting_balance),
-            transactionAmount = balance,
             balance
         )
 
     private fun makePersonalContribution(firstOfMonth: LocalDate, balance: BigDecimal) =
-        BalanceLine(
+        ContributionBalanceLine(
             firstOfMonth,
-            description = context.getString(R.string.personal_contribution),
-            transactionAmount = personalContribution,
-            balance
+            balance,
+            source = PERSONAL,
+            amount = personalContribution,
         )
 
     private fun makeEmployerContribution(firstOfMonth: LocalDate, balance: BigDecimal): BalanceLine? {
         if (employerContribution > ZERO &&
             firstOfMonth.month == Month.JANUARY || firstOfMonth.month == Month.JULY
         ) {
-            return BalanceLine(
+            return ContributionBalanceLine(
                 firstOfMonth.plusDays(1),
-                description = context.getString(R.string.employer_contribution),
-                transactionAmount = employerContribution,
-                balance.plus(employerContribution)
+                balance.plus(employerContribution),
+                source = EMPLOYER,
+                amount = employerContribution
             )
         }
         return null
     }
 
-    private fun makeReimbursementLines(expenseIndex: Int, firstOfMonth: LocalDate, accountBalance: BigDecimal): ReimbursementLines? {
+    private fun makeReimbursementLine(expenseIndex: Int, firstOfMonth: LocalDate, accountBalance: BigDecimal): ReimbursementBalanceLine? {
         if (accountBalance < reimbursementThreshold || expenses.size <= expenseIndex) {
             return null
         }
 
         val expense = expenses[expenseIndex]
+        val expenseStartingBalance = expense.remainingAmount
         var reimbursementAmount = reimbursementMax
 
         val expenseFullyReimbursed = expense.remainingAmount <= reimbursementMax
@@ -106,21 +109,14 @@ class BalanceFactory(
 
         val endingAccountBalance = accountBalance.minus(reimbursementAmount)
 
-        val accountLine = BalanceLine(
+        return ReimbursementBalanceLine(
             firstOfMonth.plusDays(2),
-            description = context.getString(R.string.reimbursement),
-            transactionAmount = reimbursementAmount.negate(),
-            endingAccountBalance
-        )
-
-        val expenseLine = BalanceLine(
-            firstOfMonth.plusDays(3),
-            description = expense.description,
-            transactionAmount = reimbursementAmount.negate(),
+            endingAccountBalance,
+            reimbursementAmount,
+            expense.description,
+            expenseStartingBalance,
             expense.remainingAmount
         )
-
-        return ReimbursementLines(accountLine, expenseLine, endingAccountBalance, expenseFullyReimbursed)
     }
 
     private fun toBigDecimal(value: Double): BigDecimal {
@@ -142,13 +138,6 @@ class BalanceFactory(
         val description: String,
         val originalAmount: BigDecimal,
         var remainingAmount: BigDecimal
-    )
-
-    private data class ReimbursementLines(
-        val accountLine: BalanceLine,
-        val expenseLine: BalanceLine,
-        val endingAccountBalance: BigDecimal,
-        val expenseFullyReimbursed: Boolean
     )
 
 }

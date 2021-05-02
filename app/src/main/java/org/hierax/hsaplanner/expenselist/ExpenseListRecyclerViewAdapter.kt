@@ -58,7 +58,7 @@ class ExpenseListRecyclerViewAdapter(
 
     inner class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val dateView: TextView = itemView.findViewById(R.id.list_item_expense_date)
-        val descriptionView: TextView = itemView.findViewById(R.id.list_item_description)
+        val descriptionView: TextView = itemView.findViewById(R.id.description)
         val originalAmountView: TextView = itemView.findViewById(R.id.list_item_original_amount)
         val remainingAmountView: TextView = itemView.findViewById(R.id.list_item_remaining_amount)
     }
