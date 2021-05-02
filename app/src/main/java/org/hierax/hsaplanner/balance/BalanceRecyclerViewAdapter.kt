@@ -78,7 +78,6 @@ class BalanceRecyclerViewAdapter(
                 val formattedExpenseEndingAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.expenseEndingBalance)
                 val it = holder as ReimbursementLineViewHolder
 
-                it.dateView.text = dateFormatter.format(reimbursementLine.date)
                 it.descriptionView.text = holder.itemView.context.getString(R.string.reimbursement, formattedReimbursementAmount)
                 it.balanceView.text = NumberFormat.getCurrencyInstance().format(reimbursementLine.balance)
                 it.expenseDescriptionView.text = reimbursementLine.expenseDescription
@@ -111,7 +110,6 @@ class BalanceRecyclerViewAdapter(
     }
 
     class ReimbursementLineViewHolder(lineView: View) : RecyclerView.ViewHolder(lineView) {
-        val dateView: TextView = lineView.findViewById(R.id.date)
         val descriptionView: TextView = lineView.findViewById(R.id.description)
         val balanceView: TextView = lineView.findViewById(R.id.balance)
         val expenseDescriptionView: TextView = lineView.findViewById(R.id.expense_description)
