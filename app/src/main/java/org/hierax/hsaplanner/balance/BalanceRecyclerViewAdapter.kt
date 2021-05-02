@@ -116,16 +116,19 @@ class BalanceRecyclerViewAdapter(
             val formattedReimbursementAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.reimbursementAmount)
             val formattedExpenseStartingAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.expenseStartingBalance)
             val formattedExpenseEndingAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.expenseEndingBalance)
+            val monthName = monthFormatter.format(reimbursementLine.date)
 
-            descriptionView.text = itemView.context.getString(R.string.reimbursement, formattedReimbursementAmount)
+            descriptionView.text = itemView.context.getString(R.string.reimbursement_description, formattedReimbursementAmount, monthName)
             balanceView.text = NumberFormat.getCurrencyInstance().format(reimbursementLine.balance)
             expenseDescriptionView.text = reimbursementLine.expenseDescription
-            expenseAmountView.text = itemView.context.getString(R.string.expense_amounts, formattedExpenseStartingAmount, formattedExpenseEndingAmount)
+            expenseAmountView.text =
+                itemView.context.getString(R.string.expense_amounts, formattedExpenseStartingAmount, formattedExpenseEndingAmount)
         }
     }
 
     companion object {
         private val dateFormatter = DateTimeFormatter.ofPattern("yyyy MMM")
+        private val monthFormatter = DateTimeFormatter.ofPattern("MMMM")
     }
 
 }

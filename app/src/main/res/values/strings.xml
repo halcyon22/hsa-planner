@@ -5,22 +5,23 @@
     <string name="action_save">Save</string>
     <string name="action_edit_expense">Edit</string>
     <string name="action_delete">Delete</string>
+    <string name="action_add_expense">Add Expense</string>
 
     <string name="personal_contribution">%s Personal Contribution</string>
     <string name="employer_contribution">%s Employer Contribution</string>
-    <string name="reimbursement">%s Reimbursement</string>
-    <string name="reimbursement_amount">(%s)</string>
+    <string name="reimbursement_description">Reimburse yourself %s in %s!</string>
     <string name="starting_balance">Starting Balance</string>
-    <string name="expense_amounts">%s -> %s</string>
+    <string name="expense_amounts">%s &#10142; %s</string>
 
-    <string name="current_balance">Current Balance</string>
-    <string name="reimbursement_max">Max Reimbursement</string>
-    <string name="reimbursement_threshold">Reimbursement Threshold</string>
+    <string name="current_balance_label">Current Balance</string>
+    <string name="personal_contribution_label">Personal Contribution</string>
+    <string name="employer_contribution_label">Employer Contribution</string>
+    <string name="reimbursement_threshold_label">Balance Threshold for Reimbursement</string>
+    <string name="reimbursement_max_label">Reimbursement Amount</string>
     <string name="setting_required">Required</string>
 
     <string name="original_amount_format">Original Amount: %s</string>
     <string name="remaining_amount_format">Remaining Amount: %s</string>
-    <string name="add_expense">Add Expense</string>
     <string name="expense_date">Expense Date</string>
     <string name="open_date_dialog">Open date dialog</string>
     <string name="expense_description">Description</string>
