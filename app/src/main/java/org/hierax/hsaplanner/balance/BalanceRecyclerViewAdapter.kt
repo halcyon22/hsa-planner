@@ -18,9 +18,7 @@ class BalanceRecyclerViewAdapter(
     private val lines: List<BalanceLine>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy MMM")
-
-    // TODO MDP add click handler for expense lines
+    // TODO MDP add click handler for starting balance, reimbursement lines
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -45,43 +43,22 @@ class BalanceRecyclerViewAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         when (lines[position].getViewType()) {
             STARTING_BALANCE -> {
+                val it = viewHolder as StartingBalanceLineViewHolder
                 val balanceLine = lines[position] as StartingBalanceLine
-                val it = holder as StartingBalanceLineViewHolder
-
-                // TODO MDP move into holder classes?
-                it.dateView.text = dateFormatter.format(balanceLine.date)
-                it.descriptionView.text = holder.itemView.context.getString(R.string.starting_balance)
-                it.balanceView.text = NumberFormat.getCurrencyInstance().format(balanceLine.balance)
+                it.updateContent(balanceLine)
             }
             CONTRIBUTION -> {
                 val contributionLine = lines[position] as ContributionBalanceLine
-                val formattedAmount = NumberFormat.getCurrencyInstance().format(contributionLine.amount)
-                val it = holder as ContributionLineViewHolder
-
-                it.dateView.text = dateFormatter.format(contributionLine.date)
-                it.descriptionView.text = when (contributionLine.source) {
-                    PERSONAL -> holder.itemView.context.getString(R.string.personal_contribution, formattedAmount)
-                    EMPLOYER -> holder.itemView.context.getString(R.string.employer_contribution, formattedAmount)
-                    else -> {
-                        throw IllegalArgumentException("Unknown contribution source: ${contributionLine.source}")
-                    }
-                }
-                it.balanceView.text = NumberFormat.getCurrencyInstance().format(contributionLine.balance)
+                val it = viewHolder as ContributionLineViewHolder
+                it.updateContent(contributionLine)
             }
             REIMBURSEMENT -> {
                 val reimbursementLine = lines[position] as ReimbursementBalanceLine
-                val formattedReimbursementAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.reimbursementAmount)
-                val formattedExpenseStartingAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.expenseStartingBalance)
-                val formattedExpenseEndingAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.expenseEndingBalance)
-                val it = holder as ReimbursementLineViewHolder
-
-                it.descriptionView.text = holder.itemView.context.getString(R.string.reimbursement, formattedReimbursementAmount)
-                it.balanceView.text = NumberFormat.getCurrencyInstance().format(reimbursementLine.balance)
-                it.expenseDescriptionView.text = reimbursementLine.expenseDescription
-                it.expenseAmountView.text = holder.itemView.context.getString(R.string.expense_amounts, formattedExpenseStartingAmount, formattedExpenseEndingAmount)
+                val it = viewHolder as ReimbursementLineViewHolder
+                it.updateContent(reimbursementLine)
             }
             else -> {
                 throw IllegalArgumentException("Unknown viewType value: ${lines[position].getViewType()}")
@@ -97,23 +74,58 @@ class BalanceRecyclerViewAdapter(
         return lines.size
     }
 
-    class StartingBalanceLineViewHolder(lineView: View) : RecyclerView.ViewHolder(lineView) {
-        val dateView: TextView = lineView.findViewById(R.id.date)
-        val descriptionView: TextView = lineView.findViewById(R.id.description)
-        val balanceView: TextView = lineView.findViewById(R.id.balance)
+    class StartingBalanceLineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val dateView: TextView = itemView.findViewById(R.id.date)
+        private val descriptionView: TextView = itemView.findViewById(R.id.description)
+        private val balanceView: TextView = itemView.findViewById(R.id.balance)
+
+        fun updateContent(startingBalanceLine: StartingBalanceLine) {
+            dateView.text = dateFormatter.format(startingBalanceLine.date)
+            descriptionView.text = itemView.context.getString(R.string.starting_balance)
+            balanceView.text = NumberFormat.getCurrencyInstance().format(startingBalanceLine.balance)
+        }
     }
 
-    class ContributionLineViewHolder(lineView: View) : RecyclerView.ViewHolder(lineView) {
-        val dateView: TextView = lineView.findViewById(R.id.date)
-        val descriptionView: TextView = lineView.findViewById(R.id.description)
-        val balanceView: TextView = lineView.findViewById(R.id.balance)
+    class ContributionLineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val dateView: TextView = itemView.findViewById(R.id.date)
+        private val descriptionView: TextView = itemView.findViewById(R.id.description)
+        private val balanceView: TextView = itemView.findViewById(R.id.balance)
+
+        fun updateContent(contributionLine: ContributionBalanceLine) {
+            val formattedAmount = NumberFormat.getCurrencyInstance().format(contributionLine.amount)
+
+            dateView.text = dateFormatter.format(contributionLine.date)
+            descriptionView.text = when (contributionLine.source) {
+                PERSONAL -> itemView.context.getString(R.string.personal_contribution, formattedAmount)
+                EMPLOYER -> itemView.context.getString(R.string.employer_contribution, formattedAmount)
+                else -> {
+                    throw IllegalArgumentException("Unknown contribution source: ${contributionLine.source}")
+                }
+            }
+            balanceView.text = NumberFormat.getCurrencyInstance().format(contributionLine.balance)
+        }
     }
 
-    class ReimbursementLineViewHolder(lineView: View) : RecyclerView.ViewHolder(lineView) {
-        val descriptionView: TextView = lineView.findViewById(R.id.description)
-        val balanceView: TextView = lineView.findViewById(R.id.balance)
-        val expenseDescriptionView: TextView = lineView.findViewById(R.id.expense_description)
-        val expenseAmountView: TextView = lineView.findViewById(R.id.expense_amounts)
+    class ReimbursementLineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val descriptionView: TextView = itemView.findViewById(R.id.description)
+        private val balanceView: TextView = itemView.findViewById(R.id.balance)
+        private val expenseDescriptionView: TextView = itemView.findViewById(R.id.expense_description)
+        private val expenseAmountView: TextView = itemView.findViewById(R.id.expense_amounts)
+
+        fun updateContent(reimbursementLine: ReimbursementBalanceLine) {
+            val formattedReimbursementAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.reimbursementAmount)
+            val formattedExpenseStartingAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.expenseStartingBalance)
+            val formattedExpenseEndingAmount = NumberFormat.getCurrencyInstance().format(reimbursementLine.expenseEndingBalance)
+
+            descriptionView.text = itemView.context.getString(R.string.reimbursement, formattedReimbursementAmount)
+            balanceView.text = NumberFormat.getCurrencyInstance().format(reimbursementLine.balance)
+            expenseDescriptionView.text = reimbursementLine.expenseDescription
+            expenseAmountView.text = itemView.context.getString(R.string.expense_amounts, formattedExpenseStartingAmount, formattedExpenseEndingAmount)
+        }
+    }
+
+    companion object {
+        private val dateFormatter = DateTimeFormatter.ofPattern("yyyy MMM")
     }
 
 }
