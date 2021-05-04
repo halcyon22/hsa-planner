@@ -44,8 +44,7 @@ class BalanceFragment : Fragment() {
         // fires when both of the inputs are ready, and when either one changes
         BalanceInputLiveData(expensesViewModel, settingsModel)
             .observe(viewLifecycleOwner, { (expenseEntities, settings) ->
-                val balanceLines = BalanceFactory(settings, expenseEntities, requireContext())
-                    .makeBalanceLines()
+                val balanceLines = BalanceFactory(settings, expenseEntities).makeBalanceLines()
                 recyclerView.adapter = BalanceRecyclerViewAdapter(balanceLines)
             })
     }

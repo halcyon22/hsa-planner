@@ -1,6 +1,5 @@
 package org.hierax.hsaplanner.balance
 
-import android.content.Context
 import org.hierax.hsaplanner.balance.ContributionBalanceLine.Companion.EMPLOYER
 import org.hierax.hsaplanner.balance.ContributionBalanceLine.Companion.PERSONAL
 import org.hierax.hsaplanner.repository.ExpenseEntity
@@ -14,8 +13,7 @@ import java.util.stream.Collectors
 
 class BalanceFactory(
     settings: SettingsEntity,
-    expenseEntities: List<ExpenseEntity>,
-    private val context: Context
+    expenseEntities: List<ExpenseEntity>
 ) {
     private val currentBalance: BigDecimal = toBigDecimal(settings.currentBalance)
     private val personalContribution: BigDecimal = toBigDecimal(settings.personalContribution)
@@ -46,17 +44,17 @@ class BalanceFactory(
                 balance = it.balance
             }
 
-            makeReimbursementLine(expenseIndex, firstOfMonth, balance)?.also {
-                lines.add(it)
-                balance = it.balance
+            var reimbursementLine = makeReimbursementLine(expenseIndex, firstOfMonth, balance)
+            while (reimbursementLine != null) {
+                lines.add(reimbursementLine)
+                balance = reimbursementLine.balance
 
                 if (expenses[expenseIndex].remainingAmount == ZERO) {
                     expenseIndex++
                 }
+
+                reimbursementLine = makeReimbursementLine(expenseIndex, firstOfMonth, balance)
             }
-
-            // TODO MDP keep trying for reimbursements while we're still over the threshold
-
         }
 
         return lines
@@ -126,7 +124,8 @@ class BalanceFactory(
     private fun transformExpenseEntities(entities: List<ExpenseEntity>): List<Expense> {
         return entities.stream()
             .map {
-                Expense(it.description,
+                Expense(
+                    it.description,
                     toBigDecimal(it.originalAmount),
                     toBigDecimal(it.remainingAmount)
                 )
