@@ -1,7 +1,9 @@
 package org.hierax.hsaplanner.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -53,13 +55,19 @@ class SettingsFragment : Fragment() {
         return when (item.itemId) {
             R.id.action_save -> {
                 handleSave()
-                return true
+                true
+            }
+            android.R.id.home -> {
+                hideKeyboard()
+                super.onOptionsItemSelected(item)
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun handleSave() {
+        hideKeyboard()
+
         val currentBalance = getValidSettingFromUi(binding.textInputCurrentBalance, binding.textInputLayoutCurrentBalance)
         val personalContribution = getValidSettingFromUi(binding.textInputPersonalContribution, binding.textInputLayoutPersonalContribution)
         val employerContribution = getValidSettingFromUi(binding.textInputEmployerContribution, binding.textInputLayoutEmployerContribution)
@@ -89,5 +97,11 @@ class SettingsFragment : Fragment() {
         }
         inputLayout.isErrorEnabled = false
         return uiValue
+    }
+
+    private fun hideKeyboard(): Boolean {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+        return true
     }
 }

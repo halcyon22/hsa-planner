@@ -1,8 +1,10 @@
 package org.hierax.hsaplanner.editexpense
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -56,7 +58,7 @@ class EditExpenseFragment : Fragment() {
                 DatePickerDialog(
                     requireContext(),
                     { _, year, month, day -> // date set listener
-                        editExpenseModel.setExpenseDate(LocalDate.of(year, month+1, day))
+                        editExpenseModel.setExpenseDate(LocalDate.of(year, month + 1, day))
                     },
                     // initial selections
                     initialDate.year,
@@ -75,14 +77,19 @@ class EditExpenseFragment : Fragment() {
         return when (item.itemId) {
             R.id.action_save -> {
                 handleSave()
-                return true
+                true
+            }
+            android.R.id.home -> {
+                hideKeyboard()
+                super.onOptionsItemSelected(item)
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    // TODO MDP close keyboard
     private fun handleSave() {
+        hideKeyboard()
+
         if (isFormValid()) {
             editExpenseModel.saveExpense(
                 binding.textInputDescription.text.toString(),
@@ -116,5 +123,11 @@ class EditExpenseFragment : Fragment() {
             valid = false
         }
         return valid
+    }
+
+    private fun hideKeyboard(): Boolean {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+        return true
     }
 }

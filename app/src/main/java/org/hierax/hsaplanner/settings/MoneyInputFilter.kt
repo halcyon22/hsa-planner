@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 
 // based on https://stackoverflow.com/a/13716269/421245
 class MoneyInputFilter : InputFilter {
-    private val inputPattern = Pattern.compile("(0|[1-9]+[0-9]*)?(\\.[0-9]{0,2})?")
+    private val inputPattern = Pattern.compile("([0-9]+[0-9]*)?(\\.[0-9]{0,2})?")
 
     override fun filter(
         source: CharSequence?,

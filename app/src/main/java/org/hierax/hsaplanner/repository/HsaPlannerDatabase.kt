@@ -85,11 +85,11 @@ abstract class HsaPlannerDatabase : RoomDatabase() {
             settingsDao.insertSettings(
                 SettingsEntity(
                     1,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
+                    1000.0,
+                    100.0,
+                    500.0,
+                    2000.0,
+                    1000.0,
                 )
             )
         }
