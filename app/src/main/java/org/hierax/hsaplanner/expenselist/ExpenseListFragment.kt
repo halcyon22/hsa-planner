@@ -7,16 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import org.hierax.hsaplanner.HsaPlannerApplication
+import dagger.hilt.android.AndroidEntryPoint
 import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentExpenseListBinding
 
+@AndroidEntryPoint
 class ExpenseListFragment : Fragment() {
     private lateinit var binding: FragmentExpenseListBinding
-    private val expensesViewModel: ExpensesViewModel by viewModels {
-        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
-        ExpensesViewModelFactory(hsaPlannerApplication.expenseDao)
-    }
+    private val expenseListViewModel: ExpenseListViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val fragmentBinding = FragmentExpenseListBinding.inflate(inflater, container, false)
@@ -30,8 +28,8 @@ class ExpenseListFragment : Fragment() {
         binding.apply {
             val recyclerView = recyclerViewExpenses
             recyclerView.setHasFixedSize(true)
-            val adapter = ExpenseListRecyclerViewAdapter(expensesViewModel)
-            expensesViewModel.allExpenses.observe(viewLifecycleOwner, { expenses ->
+            val adapter = ExpenseListRecyclerViewAdapter(expenseListViewModel)
+            expenseListViewModel.allExpenses.observe(viewLifecycleOwner, { expenses ->
                 expenses?.let { adapter.submitList(it) }
             })
             recyclerView.adapter = adapter

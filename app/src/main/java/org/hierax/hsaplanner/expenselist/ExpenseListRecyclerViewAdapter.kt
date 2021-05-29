@@ -14,7 +14,7 @@ import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 
 class ExpenseListRecyclerViewAdapter(
-    private val expensesViewModel: ExpensesViewModel
+    private val expenseListViewModel: ExpenseListViewModel
 ) : ListAdapter<ExpenseEntity, ExpenseListRecyclerViewAdapter.ExpenseViewHolder>(ExpenseComparator()) {
 
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -50,7 +50,7 @@ class ExpenseListRecyclerViewAdapter(
                 true
             }
             contextMenu.add(R.string.action_delete).setOnMenuItemClickListener {
-                expensesViewModel.deleteExpense(expense.id)
+                expenseListViewModel.deleteExpense(expense.id)
                 true
             }
         }

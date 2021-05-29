@@ -9,16 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import org.hierax.hsaplanner.HsaPlannerApplication
+import dagger.hilt.android.AndroidEntryPoint
 import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentSettingsBinding
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
-    private val settingsModel: SettingsViewModel by viewModels {
-        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
-        SettingsViewModelFactory(hsaPlannerApplication.settingsDao)
-    }
+    private val settingsModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

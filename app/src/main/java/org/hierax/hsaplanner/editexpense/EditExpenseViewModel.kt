@@ -1,14 +1,20 @@
 package org.hierax.hsaplanner.editexpense
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.hierax.hsaplanner.repository.ExpenseDao
 import org.hierax.hsaplanner.repository.ExpenseEntity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import javax.inject.Inject
 
-class EditExpenseViewModel(
+@HiltViewModel
+class EditExpenseViewModel @Inject constructor(
     private val expenseDao: ExpenseDao
 ) : ViewModel() {
     companion object {
@@ -81,17 +87,5 @@ class EditExpenseViewModel(
 
     fun isValidDouble(potentialDouble: String?): Boolean {
         return potentialDouble?.toDoubleOrNull() != null
-    }
-}
-
-class EditExpenseViewModelFactory(
-    private val expenseDao: ExpenseDao
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(EditExpenseViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return EditExpenseViewModel(expenseDao) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: $modelClass")
     }
 }

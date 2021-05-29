@@ -1,13 +1,22 @@
 package org.hierax.hsaplanner.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.hierax.hsaplanner.TAG
+import javax.inject.Singleton
 
 @Database(entities = [SettingsEntity::class, ExpenseEntity::class], version = 3)
 abstract class HsaPlannerDatabase : RoomDatabase() {
@@ -15,27 +24,24 @@ abstract class HsaPlannerDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao
 
     companion object {
-        @Volatile
-        private var INSTANCE: HsaPlannerDatabase? = null
-
-        fun getDatabase(context: Context, coroutineScope: CoroutineScope): HsaPlannerDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    HsaPlannerDatabase::class.java,
-                    "hsa_planner_database"
+        suspend fun initializeSettings(settingsDao: SettingsDao) {
+            Log.i(TAG, "initializing settings")
+            settingsDao.insertSettings(
+                SettingsEntity(
+                    1,
+                    1000.0,
+                    100.0,
+                    500.0,
+                    2000.0,
+                    1000.0,
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
-                    .addCallback(WordDatabaseCallback(coroutineScope))
-                    .build()
-                INSTANCE = instance
-                return instance
-            }
+            )
         }
 
-        private val MIGRATION_1_2 = object : Migration(1, 2) {
+        val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("""
+                database.execSQL(
+                    """
                     |create table `new_settings` (
                     |    `id` integer not null, 
                     |    `current_balance` real not null default 0.0, 
@@ -55,9 +61,10 @@ abstract class HsaPlannerDatabase : RoomDatabase() {
             }
         }
 
-        private val MIGRATION_2_3 = object : Migration(2, 3) {
+        val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("""
+                database.execSQL(
+                    """
                     |create table `expenses` (
                     |   `id` integer not null, 
                     |   `description` text not null default '', 
@@ -66,32 +73,48 @@ abstract class HsaPlannerDatabase : RoomDatabase() {
                     |   `remaining_amount` real not null default 0.0, 
                     |   primary key(`id`)
                     |)
-                    """.trimMargin())
+                    """.trimMargin()
+                )
             }
         }
     }
+}
 
-    class WordDatabaseCallback(private val coroutineScope: CoroutineScope) : RoomDatabase.Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            INSTANCE?.let { database ->
-                coroutineScope.launch {
-                    populateDatabase(database.settingsDao())
+@InstallIn(SingletonComponent::class)
+@Module
+class DatabaseModule {
+    lateinit var database: HsaPlannerDatabase
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@ApplicationContext appContext: Context): HsaPlannerDatabase {
+        val coroutineScope = CoroutineScope(SupervisorJob())
+
+        database = Room.databaseBuilder(
+            appContext,
+            HsaPlannerDatabase::class.java,
+            "hsa_planner_database"
+        )
+            .addMigrations(HsaPlannerDatabase.MIGRATION_1_2, HsaPlannerDatabase.MIGRATION_2_3)
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    coroutineScope.launch {
+                        HsaPlannerDatabase.initializeSettings(database.settingsDao())
+                    }
                 }
-            }
-        }
+            })
+            .build()
+        return database
+    }
 
-        private suspend fun populateDatabase(settingsDao: SettingsDao) {
-            settingsDao.insertSettings(
-                SettingsEntity(
-                    1,
-                    1000.0,
-                    100.0,
-                    500.0,
-                    2000.0,
-                    1000.0,
-                )
-            )
-        }
+    @Provides
+    fun provideSettingsDao(database: HsaPlannerDatabase): SettingsDao {
+        return database.settingsDao()
+    }
+
+    @Provides
+    fun provideExpenseDao(database: HsaPlannerDatabase): ExpenseDao {
+        return database.expenseDao()
     }
 }

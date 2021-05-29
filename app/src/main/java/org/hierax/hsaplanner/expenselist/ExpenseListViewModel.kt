@@ -1,11 +1,17 @@
 package org.hierax.hsaplanner.expenselist
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.hierax.hsaplanner.repository.ExpenseDao
 import org.hierax.hsaplanner.repository.ExpenseEntity
+import javax.inject.Inject
 
-class ExpensesViewModel(
+@HiltViewModel
+class ExpenseListViewModel @Inject constructor(
     private val expenseDao: ExpenseDao
 ) : ViewModel() {
     val allExpenses: LiveData<List<ExpenseEntity>> = expenseDao.getAllExpenses().asLiveData()
@@ -15,17 +21,5 @@ class ExpensesViewModel(
         viewModelScope.launch {
             expenseDao.delete(expenseId)
         }
-    }
-}
-
-class ExpensesViewModelFactory(
-    private val expenseDao: ExpenseDao
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ExpensesViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return ExpensesViewModel(expenseDao) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: $modelClass")
     }
 }

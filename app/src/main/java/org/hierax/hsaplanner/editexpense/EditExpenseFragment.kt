@@ -8,7 +8,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import org.hierax.hsaplanner.HsaPlannerApplication
 import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentEditExpenseBinding
 import org.hierax.hsaplanner.settings.MoneyInputFilter
@@ -16,10 +15,7 @@ import java.time.LocalDate
 
 class EditExpenseFragment : Fragment() {
     private lateinit var binding: FragmentEditExpenseBinding
-    private val editExpenseModel: EditExpenseViewModel by viewModels {
-        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
-        EditExpenseViewModelFactory(hsaPlannerApplication.expenseDao)
-    }
+    private val editExpenseModel: EditExpenseViewModel by viewModels()
     private var expenseId = 0
 
     companion object {

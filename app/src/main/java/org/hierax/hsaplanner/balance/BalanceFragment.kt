@@ -5,24 +5,17 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import org.hierax.hsaplanner.HsaPlannerApplication
+import dagger.hilt.android.AndroidEntryPoint
 import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentBalanceBinding
-import org.hierax.hsaplanner.expenselist.ExpensesViewModel
-import org.hierax.hsaplanner.expenselist.ExpensesViewModelFactory
+import org.hierax.hsaplanner.expenselist.ExpenseListViewModel
 import org.hierax.hsaplanner.settings.SettingsViewModel
-import org.hierax.hsaplanner.settings.SettingsViewModelFactory
 
+@AndroidEntryPoint
 class BalanceFragment : Fragment() {
     private lateinit var binding: FragmentBalanceBinding
-    private val settingsModel: SettingsViewModel by viewModels {
-        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
-        SettingsViewModelFactory(hsaPlannerApplication.settingsDao)
-    }
-    private val expensesViewModel: ExpensesViewModel by viewModels {
-        val hsaPlannerApplication = activity?.application as HsaPlannerApplication
-        ExpensesViewModelFactory(hsaPlannerApplication.expenseDao)
-    }
+    private val settingsModel: SettingsViewModel by viewModels()
+    private val expenseListViewModel: ExpenseListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +35,7 @@ class BalanceFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         // fires when both of the inputs are ready, and when either one changes
-        BalanceInputLiveData(expensesViewModel, settingsModel)
+        BalanceInputLiveData(expenseListViewModel, settingsModel)
             .observe(viewLifecycleOwner, { (expenseEntities, settings) ->
                 val balanceLines = BalanceFactory(settings, expenseEntities).makeBalanceLines()
                 recyclerView.adapter = BalanceRecyclerViewAdapter(balanceLines)
