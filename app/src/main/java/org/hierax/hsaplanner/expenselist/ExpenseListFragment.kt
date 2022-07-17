@@ -10,9 +10,13 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.databinding.FragmentExpenseListBinding
+import org.hierax.hsaplanner.util.IsoDateFormatter
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class ExpenseListFragment : Fragment() {
+class ExpenseListFragment @Inject constructor(
+    private val dateFormatter: IsoDateFormatter
+) : Fragment() {
     private lateinit var binding: FragmentExpenseListBinding
     private val expenseListViewModel: ExpenseListViewModel by viewModels()
 
@@ -28,7 +32,7 @@ class ExpenseListFragment : Fragment() {
         binding.apply {
             val recyclerView = recyclerViewExpenses
             recyclerView.setHasFixedSize(true)
-            val adapter = ExpenseListRecyclerViewAdapter(expenseListViewModel)
+            val adapter = ExpenseListRecyclerViewAdapter(expenseListViewModel, dateFormatter)
             expenseListViewModel.allExpenses.observe(viewLifecycleOwner, { expenses ->
                 expenses?.let { adapter.submitList(it) }
             })

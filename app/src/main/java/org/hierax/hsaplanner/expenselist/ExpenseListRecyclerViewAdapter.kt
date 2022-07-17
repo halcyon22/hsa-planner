@@ -10,14 +10,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.hierax.hsaplanner.R
 import org.hierax.hsaplanner.repository.ExpenseEntity
+import org.hierax.hsaplanner.util.IsoDateFormatter
 import java.text.NumberFormat
-import java.time.format.DateTimeFormatter
 
 class ExpenseListRecyclerViewAdapter(
-    private val expenseListViewModel: ExpenseListViewModel
+    private val expenseListViewModel: ExpenseListViewModel,
+    private val dateFormatter: IsoDateFormatter
 ) : ListAdapter<ExpenseEntity, ExpenseListRecyclerViewAdapter.ExpenseViewHolder>(ExpenseComparator()) {
-
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val view = LayoutInflater.from(parent.context)

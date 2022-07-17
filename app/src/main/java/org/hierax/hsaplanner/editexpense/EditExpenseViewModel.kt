@@ -8,18 +8,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.hierax.hsaplanner.repository.ExpenseDao
 import org.hierax.hsaplanner.repository.ExpenseEntity
+import org.hierax.hsaplanner.util.IsoDateFormatter
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import javax.inject.Inject
 
 @HiltViewModel
 class EditExpenseViewModel @Inject constructor(
-    private val expenseDao: ExpenseDao
+    private val expenseDao: ExpenseDao,
+    private val dateFormatter: IsoDateFormatter
 ) : ViewModel() {
-    companion object {
-        private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    }
 
     var expenseId = 0
 
@@ -65,7 +63,7 @@ class EditExpenseViewModel @Inject constructor(
     }
 
     fun formatDate(date: LocalDate): String {
-        return formatter.format(date)
+        return dateFormatter.format(date)
     }
 
     fun formatAsMoney(decimal: Double): String {
@@ -78,7 +76,7 @@ class EditExpenseViewModel @Inject constructor(
 
     fun isValidDate(potentialDate: String): Boolean {
         try {
-            formatter.parse(potentialDate)
+            dateFormatter.parse(potentialDate)
         } catch (e: DateTimeParseException) {
             return false
         }
